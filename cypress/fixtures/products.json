@@ -1,0 +1,23 @@
+[
+  {
+    "id": "HMD_1",
+    "brand": "Nokia",
+    "model": "3310 4G",
+    "price": "49",
+    "imgUrl": "https://picsum.photos/seed/nokia/200"
+  },
+  {
+    "id": "APL_1",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro",
+    "price": "1299",
+    "imgUrl": "https://picsum.photos/seed/apple/200"
+  },
+  {
+    "id": "SAM_1",
+    "brand": "Samsung",
+    "model": "Galaxy S24",
+    "price": "999",
+    "imgUrl": "https://picsum.photos/seed/samsung/200"
+  }
+]
