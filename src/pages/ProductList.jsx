@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { getProducts } from '../api/client'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
+import useDebounce from '../hooks/useDebounce.js'
 import './ProductList.css'
 
 function ProductList() {
   const [products, setProducts] = useState([])
   const [status, setStatus] = useState('loading')
   const [query, setQuery] = useState('')
+  const debouncedQuery = useDebounce(query, 300)
 
   useEffect(() => {
     let cancelled = false
@@ -26,13 +28,13 @@ function ProductList() {
   }, [])
 
   const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase()
+    const term = debouncedQuery.trim().toLowerCase()
     if (!term) return products
     return products.filter(
       ({ brand, model }) =>
         brand.toLowerCase().includes(term) || model.toLowerCase().includes(term),
     )
-  }, [products, query])
+  }, [products, debouncedQuery])
 
   return (
     <div className="page product-list">
@@ -54,7 +56,7 @@ function ProductList() {
         <p className="product-list__status">No se pudieron cargar los productos.</p>
       )}
       {status === 'ready' && filtered.length === 0 && (
-        <p className="product-list__status">Sin resultados para «{query}».</p>
+        <p className="product-list__status">Sin resultados para «{debouncedQuery}».</p>
       )}
 
       <div className="product-list__grid">

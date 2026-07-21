@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import ProductList from './ProductList.jsx'
@@ -36,25 +36,29 @@ describe('ProductList', () => {
     expect(screen.getByText('Galaxy S24')).toBeInTheDocument()
   })
 
-  it('filtra en tiempo real por marca', async () => {
+  it('filtra por marca tras el debounce', async () => {
     renderList()
     await screen.findByText('iPhone 15 Pro')
 
     await userEvent.type(screen.getByRole('searchbox'), 'samsung')
 
+    await waitFor(() =>
+      expect(screen.queryByText('iPhone 15 Pro')).not.toBeInTheDocument(),
+    )
     expect(screen.getByText('Galaxy S24')).toBeInTheDocument()
-    expect(screen.queryByText('iPhone 15 Pro')).not.toBeInTheDocument()
     expect(screen.queryByText('Iconia Talk S')).not.toBeInTheDocument()
   })
 
-  it('filtra en tiempo real por modelo', async () => {
+  it('filtra por modelo tras el debounce', async () => {
     renderList()
     await screen.findByText('iPhone 15 Pro')
 
     await userEvent.type(screen.getByRole('searchbox'), 'iphone')
 
+    await waitFor(() =>
+      expect(screen.queryByText('Galaxy S24')).not.toBeInTheDocument(),
+    )
     expect(screen.getByText('iPhone 15 Pro')).toBeInTheDocument()
-    expect(screen.queryByText('Galaxy S24')).not.toBeInTheDocument()
   })
 
   it('muestra mensaje sin resultados', async () => {
@@ -63,6 +67,6 @@ describe('ProductList', () => {
 
     await userEvent.type(screen.getByRole('searchbox'), 'nokia')
 
-    expect(screen.getByText(/Sin resultados/)).toBeInTheDocument()
+    expect(await screen.findByText(/Sin resultados/)).toBeInTheDocument()
   })
 })
