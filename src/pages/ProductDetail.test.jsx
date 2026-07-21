@@ -109,4 +109,40 @@ describe('ProductDetail', () => {
       storageCode: 2001,
     })
   })
+
+  it('muestra «Producto no encontrado» cuando el producto no existe (404)', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    getProduct.mockRejectedValue({ notFound: true })
+
+    renderDetail()
+
+    expect(await screen.findByText('Producto no encontrado.')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Volver al listado' })).toBeInTheDocument()
+    errorSpy.mockRestore()
+  })
+
+  it('muestra error de red con opción de reintentar y recarga al pulsarla', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    getProduct.mockRejectedValueOnce(new Error('network')).mockResolvedValue(PRODUCT)
+
+    renderDetail()
+    const retry = await screen.findByRole('button', { name: 'Reintentar' })
+
+    await userEvent.click(retry)
+
+    expect(await screen.findByText('Iconia Talk S')).toBeInTheDocument()
+    errorSpy.mockRestore()
+  })
+
+  it('resetea el mensaje «añadido» al cambiar una opción', async () => {
+    renderDetail()
+    await screen.findByText('Iconia Talk S')
+
+    await userEvent.click(screen.getByRole('button', { name: 'Añadir a la cesta' }))
+    expect(await screen.findByText('Producto añadido a la cesta.')).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Color White' }))
+
+    expect(screen.queryByText('Producto añadido a la cesta.')).not.toBeInTheDocument()
+  })
 })
