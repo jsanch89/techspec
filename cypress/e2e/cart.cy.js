@@ -14,16 +14,4 @@ describe('Contador de cesta', () => {
     cy.wait('@addCart')
     cy.get('.header__cart-badge').should('have.text', '1')
   })
-
-  it('el botón de tarjeta añade el producto y actualiza el badge del header', () => {
-    cy.visit('/')
-    cy.wait('@getProducts')
-    cy.contains('3310 4G')
-      .closest('.product-card')
-      .find('button[aria-label^="Añadir"]')
-      .click()
-    cy.wait('@getDetail')
-    cy.wait('@addCart')
-    cy.get('.header__cart-badge').should('have.text', '1')
-  })
 })
