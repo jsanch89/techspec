@@ -3,7 +3,13 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import ProductCard from './ProductCard.jsx'
 
-const PRODUCT = { id: 'abc1', brand: 'Acer', model: 'Liquid Z6 Plus', price: '250', imgUrl: 'a.jpg' }
+const PRODUCT = {
+  id: 'abc1',
+  brand: 'Acer',
+  model: 'Liquid Z6 Plus',
+  price: '250',
+  imgUrl: 'a.jpg',
+}
 
 function renderCard() {
   return render(

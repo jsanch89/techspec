@@ -42,8 +42,8 @@ function ProductList() {
         <div>
           <h1 className="product-list__title">Smartphones</h1>
           <p className="product-list__subtitle">
-            Explora nuestra selección curada de dispositivos móviles de última
-            generación, diseñados para la excelencia técnica.
+            Explora nuestra selección curada de dispositivos móviles de última generación,
+            diseñados para la excelencia técnica.
           </p>
         </div>
         <div className="product-list__search">
@@ -51,7 +51,9 @@ function ProductList() {
         </div>
       </div>
 
-      {status === 'loading' && <p className="product-list__status">Cargando productos...</p>}
+      {status === 'loading' && (
+        <p className="product-list__status">Cargando productos...</p>
+      )}
       {status === 'error' && (
         <p className="product-list__status">No se pudieron cargar los productos.</p>
       )}

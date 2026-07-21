@@ -107,7 +107,9 @@ function ProductDetail() {
       <div className="detail__info">
         <span className="detail__badge">{product.brand}</span>
         <h1 className="detail__title">{product.model}</h1>
-        <p className="detail__price">{product.price ? `${product.price} €` : 'Precio no disponible'}</p>
+        <p className="detail__price">
+          {product.price ? `${product.price} €` : 'Precio no disponible'}
+        </p>
 
         <hr className="detail__divider" />
 

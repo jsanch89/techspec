@@ -2,7 +2,9 @@ const API = 'https://itx-frontend-test.onrender.com'
 
 describe('Detalle de producto', () => {
   beforeEach(() => {
-    cy.intercept('GET', `${API}/api/product/HMD_1`, { fixture: 'product-detail.json' }).as('getDetail')
+    cy.intercept('GET', `${API}/api/product/HMD_1`, {
+      fixture: 'product-detail.json',
+    }).as('getDetail')
     cy.visit('/product/HMD_1')
     cy.wait('@getDetail')
   })

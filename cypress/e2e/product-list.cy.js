@@ -2,7 +2,9 @@ const API = 'https://itx-frontend-test.onrender.com'
 
 describe('Listado de productos', () => {
   beforeEach(() => {
-    cy.intercept('GET', `${API}/api/product`, { fixture: 'products.json' }).as('getProducts')
+    cy.intercept('GET', `${API}/api/product`, { fixture: 'products.json' }).as(
+      'getProducts',
+    )
     cy.visit('/')
     cy.wait('@getProducts')
   })
@@ -34,7 +36,9 @@ describe('Listado de productos', () => {
   })
 
   it('navega al detalle al clicar la tarjeta', () => {
-    cy.intercept('GET', `${API}/api/product/HMD_1`, { fixture: 'product-detail.json' }).as('getDetail')
+    cy.intercept('GET', `${API}/api/product/HMD_1`, {
+      fixture: 'product-detail.json',
+    }).as('getDetail')
     cy.contains('3310 4G').click()
     cy.url().should('include', '/product/HMD_1')
     cy.wait('@getDetail')

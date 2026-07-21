@@ -22,12 +22,12 @@ en `localStorage`.
 
 ## Scripts
 
-| Comando         | Descripción                          |
-| --------------- | ------------------------------------ |
-| `npm run start` | Arranca el entorno de desarrollo     |
-| `npm run build` | Genera la build de producción        |
-| `npm run test`  | Ejecuta la suite de tests            |
-| `npm run lint`  | Ejecuta el linter                    |
+| Comando         | Descripción                      |
+| --------------- | -------------------------------- |
+| `npm run start` | Arranca el entorno de desarrollo |
+| `npm run build` | Genera la build de producción    |
+| `npm run test`  | Ejecuta la suite de tests        |
+| `npm run lint`  | Ejecuta el linter                |
 
 ## Arquitectura
 

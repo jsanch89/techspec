@@ -19,9 +19,7 @@ export function CartProvider({ children }) {
   }, [])
 
   return (
-    <CartContext.Provider value={{ count, updateCount }}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={{ count, updateCount }}>{children}</CartContext.Provider>
   )
 }
 

@@ -18,10 +18,7 @@ export function getCached(key) {
 
 export function setCached(key, data) {
   try {
-    localStorage.setItem(
-      PREFIX + key,
-      JSON.stringify({ timestamp: Date.now(), data }),
-    )
+    localStorage.setItem(PREFIX + key, JSON.stringify({ timestamp: Date.now(), data }))
   } catch {
     // localStorage lleno o no disponible: se ignora, la app funciona sin cache
   }

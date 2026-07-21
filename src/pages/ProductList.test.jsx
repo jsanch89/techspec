@@ -55,9 +55,7 @@ describe('ProductList', () => {
 
     await userEvent.type(screen.getByRole('searchbox'), 'iphone')
 
-    await waitFor(() =>
-      expect(screen.queryByText('Galaxy S24')).not.toBeInTheDocument(),
-    )
+    await waitFor(() => expect(screen.queryByText('Galaxy S24')).not.toBeInTheDocument())
     expect(screen.getByText('iPhone 15 Pro')).toBeInTheDocument()
   })
 
