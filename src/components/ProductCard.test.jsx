@@ -45,7 +45,7 @@ describe('ProductCard', () => {
     addToCart.mockResolvedValue({ count: 1 })
   })
 
-  it('añade a la cesta con las opciones por defecto y persiste el item', async () => {
+  it('añade a la cesta con las opciones por defecto y actualiza el contador', async () => {
     renderCard()
 
     await userEvent.click(
@@ -58,16 +58,6 @@ describe('ProductCard', () => {
       colorCode: 1000,
       storageCode: 2000,
     })
-    const stored = JSON.parse(localStorage.getItem('techspec-cart-items'))
-    expect(stored).toEqual([
-      expect.objectContaining({
-        id: 'abc1',
-        model: 'Liquid Z6 Plus',
-        colorName: 'Black',
-        storageName: '16 GB',
-        qty: 1,
-      }),
-    ])
     expect(localStorage.getItem('techspec-cart-count')).toBe('1')
   })
 })

@@ -33,7 +33,7 @@ function formatValue(value) {
 
 function ProductDetail() {
   const { id } = useParams()
-  const { addItem } = useCart()
+  const { updateCount } = useCart()
   const [product, setProduct] = useState(null)
   const [status, setStatus] = useState('loading')
   const [colorCode, setColorCode] = useState(null)
@@ -63,18 +63,8 @@ function ProductDetail() {
   const handleAdd = async () => {
     setAddStatus('adding')
     try {
-      await addToCart({ id, colorCode, storageCode })
-      addItem({
-        id,
-        colorCode,
-        storageCode,
-        brand: product.brand,
-        model: product.model,
-        price: product.price,
-        imgUrl: product.imgUrl,
-        colorName: product.options?.colors?.find((c) => c.code === colorCode)?.name,
-        storageName: product.options?.storages?.find((s) => s.code === storageCode)?.name,
-      })
+      const { count } = await addToCart({ id, colorCode, storageCode })
+      updateCount(count)
       setAddStatus('added')
     } catch {
       setAddStatus('error')

@@ -7,7 +7,7 @@ import './ProductCard.css'
 
 function ProductCard({ product }) {
   const { id, brand, model, price, imgUrl } = product
-  const { addItem } = useCart()
+  const { updateCount } = useCart()
   const [adding, setAdding] = useState(false)
 
   const handleAdd = async (event) => {
@@ -20,18 +20,12 @@ function ProductCard({ product }) {
       const detail = await getProduct(id)
       const color = detail.options?.colors?.[0]
       const storage = detail.options?.storages?.[0]
-      await addToCart({ id, colorCode: color?.code, storageCode: storage?.code })
-      addItem({
+      const { count } = await addToCart({
         id,
         colorCode: color?.code,
         storageCode: storage?.code,
-        brand: detail.brand,
-        model: detail.model,
-        price: detail.price,
-        imgUrl: detail.imgUrl,
-        colorName: color?.name,
-        storageName: storage?.name,
       })
+      updateCount(count)
     } finally {
       setAdding(false)
     }
