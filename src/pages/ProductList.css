@@ -32,6 +32,18 @@
   color: var(--color-text-secondary);
 }
 
+.product-list__retry {
+  margin-top: 12px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-strong);
+  font-family: var(--font-heading);
+  font-size: 14px;
+  line-height: 20px;
+  padding: 8px 20px;
+  cursor: pointer;
+}
+
 .product-list__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

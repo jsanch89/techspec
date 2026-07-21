@@ -67,4 +67,27 @@ describe('ProductList', () => {
 
     expect(await screen.findByText(/Sin resultados/)).toBeInTheDocument()
   })
+
+  it('muestra estado de error cuando falla la carga', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    getProducts.mockRejectedValue(new Error('network'))
+
+    renderList()
+
+    expect(await screen.findByText('No se pudieron cargar los productos.')).toBeInTheDocument()
+    errorSpy.mockRestore()
+  })
+
+  it('reintenta la carga al pulsar «Reintentar»', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    getProducts.mockRejectedValueOnce(new Error('network')).mockResolvedValue(PRODUCTS)
+
+    renderList()
+    const retry = await screen.findByRole('button', { name: 'Reintentar' })
+
+    await userEvent.click(retry)
+
+    expect(await screen.findByText('iPhone 15 Pro')).toBeInTheDocument()
+    errorSpy.mockRestore()
+  })
 })

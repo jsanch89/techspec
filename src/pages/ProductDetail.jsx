@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { getProduct, addToCart } from '../api/client'
 import { useCart } from '../context/CartContext.jsx'
 import './ProductDetail.css'
@@ -40,7 +40,7 @@ function ProductDetail() {
   const [storageCode, setStorageCode] = useState(null)
   const [addStatus, setAddStatus] = useState('idle')
 
-  useEffect(() => {
+  const load = useCallback(() => {
     let cancelled = false
     setStatus('loading')
     getProduct(id)
@@ -52,15 +52,25 @@ function ProductDetail() {
         setStorageCode(data.options?.storages?.[0]?.code ?? null)
         setStatus('ready')
       })
-      .catch(() => {
-        if (!cancelled) setStatus('error')
+      .catch((err) => {
+        if (cancelled) return
+        console.error('No se pudo cargar el producto:', err)
+        setStatus(err?.notFound ? 'notfound' : 'error')
       })
     return () => {
       cancelled = true
     }
   }, [id])
 
+  useEffect(() => load(), [load])
+
+  // Al cambiar la selección, el feedback previo de "añadido"/"error" deja de ser válido.
+  useEffect(() => {
+    setAddStatus('idle')
+  }, [colorCode, storageCode])
+
   const handleAdd = async () => {
+    if (colorCode == null || storageCode == null) return
     setAddStatus('adding')
     try {
       const { count } = await addToCart({ id, colorCode, storageCode })
@@ -74,8 +84,25 @@ function ProductDetail() {
   if (status === 'loading') {
     return <div className="page detail__status">Cargando producto...</div>
   }
+  if (status === 'notfound') {
+    return (
+      <div className="page detail__status">
+        <p>Producto no encontrado.</p>
+        <Link to="/" className="detail__back">
+          Volver al listado
+        </Link>
+      </div>
+    )
+  }
   if (status === 'error') {
-    return <div className="page detail__status">No se pudo cargar el producto.</div>
+    return (
+      <div className="page detail__status">
+        <p>No se pudo cargar el producto.</p>
+        <button type="button" className="detail__retry" onClick={() => load()}>
+          Reintentar
+        </button>
+      </div>
+    )
   }
 
   const colors = product.options?.colors ?? []
@@ -166,7 +193,7 @@ function ProductDetail() {
           type="button"
           className="detail__add"
           onClick={handleAdd}
-          disabled={addStatus === 'adding'}
+          disabled={addStatus === 'adding' || colorCode == null || storageCode == null}
         >
           {addStatus === 'adding' ? 'Añadiendo...' : 'Añadir a la cesta'}
         </button>

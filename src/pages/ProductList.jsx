@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getProducts } from '../api/client'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
@@ -11,21 +11,26 @@ function ProductList() {
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebounce(query, 300)
 
-  useEffect(() => {
+  const load = useCallback(() => {
     let cancelled = false
+    setStatus('loading')
     getProducts()
       .then((data) => {
         if (cancelled) return
         setProducts(data)
         setStatus('ready')
       })
-      .catch(() => {
-        if (!cancelled) setStatus('error')
+      .catch((err) => {
+        if (cancelled) return
+        console.error('No se pudieron cargar los productos:', err)
+        setStatus('error')
       })
     return () => {
       cancelled = true
     }
   }, [])
+
+  useEffect(() => load(), [load])
 
   const filtered = useMemo(() => {
     const term = debouncedQuery.trim().toLowerCase()
@@ -55,7 +60,12 @@ function ProductList() {
         <p className="product-list__status">Cargando productos...</p>
       )}
       {status === 'error' && (
-        <p className="product-list__status">No se pudieron cargar los productos.</p>
+        <div className="product-list__status">
+          <p>No se pudieron cargar los productos.</p>
+          <button type="button" className="product-list__retry" onClick={() => load()}>
+            Reintentar
+          </button>
+        </div>
       )}
       {status === 'ready' && filtered.length === 0 && (
         <p className="product-list__status">Sin resultados para «{debouncedQuery}».</p>
